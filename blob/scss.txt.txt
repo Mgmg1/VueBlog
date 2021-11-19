@@ -1,0 +1,144 @@
+scss  $定义变量，$开头  $bgcolor: lightblue;   $variablename: value;
+
+变量直接嵌入	.class{	background-color: $bgcolor	}; 
+  变量名(bgcolor)  和 变量值(lightblue)   小写
+
+sass runoob-test.scss 运行命令, 编译scss文件
+
+sass runoob-test.scss  abc.css 将编译好的文件写入 abc.css
+
+
+scss 变量存储类型
+字符串 数字  颜色值 布尔值   列表 null值
+
+
+scss 作用域
+
+和 Java 类似   {   } 大括号作为分界  
+下级可用上级的变量，下级的变量为局部变量  根位置变量可任意使用
+在局部定义全局变量!global    .class{ $myColor: green  !global;}
+
+所有的全局变量我们一般定义在同一个文件，
+如：_globals.scss，然后我们使用 @include 来包含该文件。
+
+
+scss嵌套规则
+nav {
+  
+  p{  
+   
+  }
+ 
+  a{  
+ 
+  }
+ 
+}
+
+等价css 
+nav p {
+
+}
+
+nav a {
+
+
+}
+
+scss font-kkk   嵌套不写前缀
+font {
+  
+  kkkk: a ;
+  
+  xxx: b  ;  
+
+}
+等价css
+
+font-kkkk: a
+font-xxx:  b
+
+
+scss  @import filename; 
+如  @import "variables";  这将导入"variables.scss"
+也可导入css文件，但是需要加入 .css后缀，只有scss文件可以省略后缀
+一般来说，将根节点的scss样式 或 共同的scss文件
+先导入到子孙节点的scss文件中，再编写scss文件
+
+导入时scss会自动先被编译成css文件
+文件名的开头添加一个下划线  _filename   scss文件将不会编译成css文件
+导入语句中我们不需要添加下划线    @import "colors";
+
+不要将带下划线与不带下划线的同名文件放置在同一个目录下，比如
+，_colors.scss 和 colors.scss 不能同时存在于同一个目录下，
+否则带下划线的文件将会被忽略。
+
+
+
+混入
+Sass 的连接符号 - 与下划线符号 _ 是相同的，也就是 
+@mixin important-text { } 与 @mixin important_text { } 是一样的混入。
+
+@mixin 指令来定义混入
+@mixin important-text {
+
+}
+
+@include 指令可用于包含一混入
+.class{
+   @include mixin-name;
+}
+
+从形式来看，混入是对 多个样式的作为变量来引用
+@include 除了导入文件，还可以文件内部引用混入
+
+
+定义混入时，混入中也可以包含混入   （像是对象中引用其它的对象）
+
+
+混入可以接收参数
+@mixin bordered($color, $width) { }
+
+现在来看，混入像是个函数，返回样式
+
+
+混入的参数也可以定义默认值
+@mixin bordered($color: blue, $width: 1px) {
+}
+
+可变参数 直接带入
+@mixin box-shadow($shadows...) {
+       -moz-box-shadow: $shadows;
+       -webkit-box-shadow: $shadows;
+       box-shadow: $shadows;
+}
+@include box-shadow(0px 4px 5px #666, 2px 6px 10px #999);
+css  :   -moz-box-box-shadow: 0px 4px 5px #666, 2px 6px 10px #999;
+
+浏览器前缀使用混入
+@mixin transform($property)
+.myBox {
+   @include transform(rotate(20deg));
+}
+.myBox {transform: rotate(20deg);
+}
+
+
+如果一个样式与另外一个样式几乎相同，只有少量的区别，
+则使用 @extend 就显得很有用
+@extend  继承样式
+
+.button-report  {
+   @extend .button-basic;
+   background-color: red;
+}
+可以看出混入比继承灵活，
+使用 @extend 后，我们在 HTML 按钮标签中就不需要指定多个类 c
+lass="button-basic button-report" ，只需要设置 class="button-report" 类就好了。
+@extend 很好的体现了代码的复用。
+
+scss可直接调用自带的函数如。。。。
+
+
+
+

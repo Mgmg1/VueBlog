@@ -1,0 +1,39 @@
+@import "./normalize.css";
+
+
+:root {
+  --show-time:.3s ;
+  --global-opacity:1;
+  --pic-opacity:100;
+  width: 100vw;
+  overflow-x: hidden;
+  font-size: 16px;
+  min-width: 480px;
+  cursor: url("../../assets/img/blog_page/cursor.ico"),auto;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  outline: none;
+}
+
+body {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+
+a {
+  text-decoration: none;
+}
+
+.icon {
+  width: 1em;
+  height: 1em;
+  fill: currentColor;
+  vertical-align: -.125em;
+}
