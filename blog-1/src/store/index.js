@@ -7,10 +7,11 @@ import getters from "./getters";
 import actions from "./actions";
 
 const state = {
+  //已登录的用户信息
   user:{
-    userName:'二刺螈',
-    announcement:'<p>这里是公告~~~</p>',
-    userId:2
+    userName:'',
+    announcement:'',
+    userId:0
   },
   blogsInfo:[
 
@@ -20,6 +21,7 @@ const state = {
   isLogIn:false,
   fingerPrintId:'',
   blogsCountInfo:{},
+  //当前页面的用户信息
   pageUser:{
 
   },

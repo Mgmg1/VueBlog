@@ -3,6 +3,9 @@ import {blogHost} from "./host";
 import {getToken} from "../common/cache";
 import {getParamsMd5Str} from "../common/utils";
 
+/*
+  登录
+ */
 export function login(data,fid) {
 
   let paramsData = {
@@ -21,6 +24,9 @@ export function login(data,fid) {
   })
 }
 
+/*
+  当进入或切换页面时，需要验证登录逻辑
+ */
 export function autoLogin(fid,isAutoLogin) {
 
   let paramsData = {
@@ -38,6 +44,9 @@ export function autoLogin(fid,isAutoLogin) {
   })
 }
 
+/*
+  提交注册信息
+ */
 export function register(data) {
 
   let paramsData = {
@@ -57,6 +66,9 @@ export function register(data) {
   })
 }
 
+/*
+  发送邮件
+ */
 export function sendEmail(email) {
 
   let paramsData = {
@@ -73,6 +85,9 @@ export function sendEmail(email) {
   })
 }
 
+/*
+  登出
+ */
 export function logout() {
 
   let paramsData = {}
@@ -85,6 +100,9 @@ export function logout() {
   })
 }
 
+/*
+  得到blog的统计信息
+ */
 export function getBlogTypeInfo(usedId) {
 
   let paramsData = {
@@ -100,6 +118,9 @@ export function getBlogTypeInfo(usedId) {
   })
 }
 
+/*
+  上传blog时，提交form表单
+ */
 export function upload(formData,signData,fid) {
 
   let md5Str = getParamsMd5Str(signData)
@@ -116,6 +137,9 @@ export function upload(formData,signData,fid) {
   })
 }
 
+/*
+  得到blog的信息
+ */
 export function getBlogInfos(type,userId,name) {
 
   let paramsData = {
@@ -133,6 +157,9 @@ export function getBlogInfos(type,userId,name) {
   })
 }
 
+/*
+  单独查询blog的内容
+ */
 export function getBlogContent(articleId) {
 
   let paramsData = {
@@ -149,6 +176,9 @@ export function getBlogContent(articleId) {
   })
 }
 
+/*
+  得到默认主页展示的用户的id
+ */
 export function getDefaultUserId() {
 
   let paramsData = {}
@@ -161,6 +191,9 @@ export function getDefaultUserId() {
   })
 }
 
+/*
+  得到用户信息
+ */
 export function getUserInfo(userId) {
 
   let paramsData = {
@@ -176,6 +209,9 @@ export function getUserInfo(userId) {
   })
 }
 
+/*
+  更新用户头像的url
+ */
 export function submitHeadImgUrl(fid,url,uid) {
 
   let paramsData = {
@@ -197,6 +233,9 @@ export function submitHeadImgUrl(fid,url,uid) {
   })
 }
 
+/*
+  更新公告栏的内容
+ */
 export function submitAnnouncement(fid,annon,uid) {
 
   let paramsData = {
@@ -218,6 +257,9 @@ export function submitAnnouncement(fid,annon,uid) {
   })
 }
 
+/*
+  根据tag查询响应的articleId
+ */
 export function getTagsByArticleId(articleId) {
 
   let paramsData = {
@@ -232,6 +274,9 @@ export function getTagsByArticleId(articleId) {
   })
 }
 
+/*
+  更新 github 和 bilibili 主页 url
+ */
 export function submitGithubBilibiliUrl(userId,githubUrl,bilibiliUrl,fid) {
   let paramsData = {
     'githubUrl':githubUrl,
@@ -252,3 +297,31 @@ export function submitGithubBilibiliUrl(userId,githubUrl,bilibiliUrl,fid) {
     }
   })
 }
+
+export function downloadBlogFileUrl(articleId) {
+  return `${blogHost}/download?articleid=${articleId}`
+}
+
+/*
+  根据 articleId删除 对应的article
+ */
+export function deleteArticleByArticleId(userId,articleId,fid) {
+  let paramsData = {
+    'uid':userId,
+    'aid':articleId
+  }
+  return request2({
+    method:'post',
+    url:`${blogHost}/deletearticle`,
+    headers:{
+      'Authorization': getToken(),
+      'fid': fid,
+    },
+    params:{
+      ...paramsData,
+      sign:getParamsMd5Str( paramsData )
+    }
+  })
+}
+
+

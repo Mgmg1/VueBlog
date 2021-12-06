@@ -29,6 +29,8 @@
 
   import {mapGetters} from 'vuex'
   import {formatDate} from "../../../common/utils";
+  import {getBlogInfos, getBlogTypeInfo} from "../../../network/blogpage";
+  import * as types from "../../../store/mutations-type";
 
   export default {
     name: "BlogBox",
@@ -48,9 +50,24 @@
     computed:{
       ...mapGetters([
         'blogsInfo',
-        'fingerPrintId'
+        'fingerPrintId',
       ]),
-
+    },
+    activated() {
+      //父组件先初始化
+      let userId =  parseInt(this.$route.params.uid)
+      if( !isNaN(userId) && userId > 0 ) {
+        getBlogTypeInfo(userId).then(res => {
+          if (res.data.code === 200 && res.data.data) {
+            this.$store.commit(types.SET_BLOGS_COUNT_INFO, res.data.data)
+          }
+        })
+        getBlogInfos('all',userId,'all').then(res=>{
+          if(res.data.code === 200 && res.data.data) {
+            this.$store.commit(types.SET_BLOGS_INFO,res.data.data)
+          }
+        })
+      }
     }
   }
 </script>

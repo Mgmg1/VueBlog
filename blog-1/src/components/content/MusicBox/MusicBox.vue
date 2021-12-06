@@ -11,7 +11,7 @@
     </nav-bar>
     <div class="record">
       <div class="bg">
-        <video  autoplay muted loop ref="bg">
+        <video autoplay muted loop ref="bg">
           <source src="@/assets/video/bgvideo480.mp4" type="video/mp4">
         </video>
       </div>
@@ -79,6 +79,7 @@
   import NavBar from "../../common/NavBar/NavBar";
   import MusicProgressBar from "../MusicProgressBar/MusicProgressBar";
 
+
   export default {
     name: "MusicBox",
     data(){
@@ -102,7 +103,8 @@
         lyrics:[],
         lyricTimeStamp:[],
         searchDebounce:undefined,
-        currentIndex:0
+        currentIndex:0,
+
       }
     },
     components: {
@@ -110,6 +112,7 @@
       NavBar
     },
     methods:{
+      //触发事件
       audioToEnd(){
         this.$refs.musicBar.pauseMusic()
         this.isMusicPlaying = false
@@ -184,6 +187,7 @@
           this.currentIndex = index
         }
       },
+
       //网络请求
       searchSong(keyword){
         searchSong(keyword).then(res=>{
@@ -194,12 +198,17 @@
             this.songList.authors = []
             this.songList.durations = []
             this.songList.albumIds = []
-            for (let i = 0; i<6&&i<res.result.songs.length; i++) {
-              this.songList.songIds.push(res.result.songs[i].id)
-              this.songList.names.push(res.result.songs[i].name)
-              this.songList.authors.push(res.result.songs[i].artists[0].name)
-              this.songList.durations.push(seconds2MinutesSeconds(res.result.songs[i].duration/1000))
-              this.songList.albumIds.push( res.result.songs[i].album.id )
+            let count = 0;
+            for (let i = 0; count<6&&i<res.result.songs.length;i++) {
+              let fee = res.result.songs[i].fee
+              if( fee === 0 || fee === 8 ) {
+                this.songList.songIds.push(res.result.songs[i].id)
+                this.songList.names.push(res.result.songs[i].name)
+                this.songList.authors.push(res.result.songs[i].artists[0].name)
+                this.songList.durations.push(seconds2MinutesSeconds(res.result.songs[i].duration/1000))
+                this.songList.albumIds.push( res.result.songs[i].album.id )
+                count++
+              }
             }
           }
         }).catch(e=>{
@@ -241,23 +250,9 @@
         */
         //新接口
 
-        getSongUrl(songId).then(res=>{
-          if (res) {
-            if(this.isFirstPlay) {
-              this.isFirstPlay = false
-              this.$refs.musicBar.setAutoPlay()
-            }else {
-              this.$refs.musicBar.isPlaying = true
-              this.isMusicPlaying = true
-              this.$refs.musicBar.playMusic()
-            }
-            //无奈硬编码。。。
-            this.musicUrl = `https://music.163.com/song/media/outer/url?id=${songId}.mp3`
-          } else {
-            this.musicUrl = undefined
-            alert('暂无版权哦～')
-          }
-        })
+        //无奈硬编码
+        this.musicUrl = `https://music.163.com/song/media/outer/url?id=${songId}.mp3`
+
       },
       getLyric(songId){
         getLyric(songId).then(res=>{

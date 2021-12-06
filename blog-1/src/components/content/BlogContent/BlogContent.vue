@@ -1,8 +1,18 @@
 <template>
   <div class="blog-content">
-    <div class="return-icon" >
-      <svg class="icon" @click="back" ><use xlink:href="#iconfengche"></use></svg>
+    <div class="content-header" >
+      <svg class="icon return" @click="back" ><use xlink:href="#iconfengche"></use></svg>
+      <svg class="icon more" @click="isShowMoreSelector=!isShowMoreSelector"><use xlink:href="#iconzhuye"></use></svg>
     </div>
+    <transition name="more-selector">
+      <div class="more-selector" v-show="isShowMoreSelector">
+        <ul>
+          <li @click="moreSelect(1)">编辑</li>
+          <li @click="moreSelect(2)"><a target="_blank" ref="download">导出</a></li>
+          <li @click="moreSelect(3)">删除</li>
+        </ul>
+      </div>
+    </transition>
     <div class="title">
       {{ this.currentBlog.title }}
     </div>
@@ -33,10 +43,15 @@
 
 <script>
 
-  import {mapGetters} from 'vuex'
-  import {getBlogContent, getTagsByArticleId} from "../../../network/blogpage";
+  import {mapGetters,mapActions} from 'vuex'
+  import {
+    getBlogContent,
+    getTagsByArticleId,
+    downloadBlogFileUrl,
+    deleteArticleByArticleId
+  } from "../../../network/blogpage";
   import * as types from "../../../store/mutations-type";
-  import {formatDate} from "../../../common/utils";
+  import {formatDate,until} from "../../../common/utils";
 
   export default {
     name: "BlogContent",
@@ -44,10 +59,14 @@
       return {
         markdownText:'',
         isShowNavigation:true,
+        isShowMoreSelector:false,
         tags:[]
       }
     },
     methods:{
+      /*
+        事件
+       */
       navigationBtnClick(event){
         let navigationWrapper =this.$refs.editor.$el.getElementsByClassName('v-note-navigation-wrapper')[0]
         if(this.isShowNavigation) {
@@ -61,13 +80,29 @@
       back(){
         this.$router.back()
       },
+      moreSelect(index) {
+        /*
+          根据选项执行对应more-selector的逻辑
+          index : { 1,2,3 }
+         */
+        if( index === 1 ) { //index1 对应的 li
+          alert("编辑功能尚未开放~")
+        }else if( index === 3 ) {
+          if( confirm("是否删除当前博客?") ) {
+            this.$store.dispatch({
+              type:'deleteArticleByArticleIdInAction',
+              router:this.$router
+            })
+          }
+        }
+      },
       formatDate(date) {
         return formatDate(new Date(date),'yyyy-MM-dd hh-mm-ss'  )
       },
       initialize(){
         // let blogId = this.$route.fullPath.match(/\d+$/)[0]
         let blogId = this.$route.params.articleid
-        getBlogContent( blogId).then(res => {
+        getBlogContent(blogId).then(res => {
           if (res.data.code === 200 && res.data.data) {
             this.$store.commit(types.SET_CURRBLOG, res.data.data)
             this.markdownText = res.data.data.content
@@ -78,7 +113,7 @@
             this.tags = res.data.data
           }
         })
-      }
+      },
       //对编辑器做一些小改造 , 这里无法使用vue的动画过渡，
       //考虑使用 create-keyframe-animation 做改造（待定）
       // editorInitial(){
@@ -94,13 +129,23 @@
       //     navigationWrapper.style.transition = 'all .3s'
       //   },.3)
       // }
+      // ...mapActions([
+      //   'deleteArticleByArticleId'
+      // ])
     },
     computed:{
       ...mapGetters([
         'currentBlog',
-        'fingerPrintId'
+        'fingerPrintId',
+        'user'
       ]),
-
+    },
+    mounted() {
+      this.$nextTick(()=>{
+        until(()=>this.$refs.download,()=>{
+          this.$refs.download.href = downloadBlogFileUrl(1);
+        })
+      })
     },
     activated() {
       this.initialize()
@@ -119,6 +164,8 @@
   background-color: rgba(246, 245, 245,var(--global-opacity,1));
   text-align: center;
   border-radius: 20px;
+  position: relative;
+  user-select: none;
   @keyframes returnIconRotate {
     50% {
       transform: rotate(90deg);
@@ -127,13 +174,56 @@
       transform: rotate(90deg);
     }
   }
-  .return-icon {
-    padding: 8px 0 0 15px;
+  @keyframes twinkle {
+    30% {
+      opacity: 30%;
+    }
+    100% {
+      opacity: 100%;
+    }
+  }
+  .content-header {
+    padding: 8px 15px 0 15px;
     text-align: left;
+    overflow: hidden;
     svg {
       height: 35px;
       width: 35px;
-      animation: returnIconRotate 1s infinite;
+    }
+    .return {
+      float: left;
+      animation: returnIconRotate 1.5s infinite;
+    }
+    .more {
+      float: right;
+      animation: twinkle 3s ease-in-out infinite;
+    }
+  }
+  .more-selector{
+    border-radius: 10px;
+    position: absolute;
+    width: 100px;
+    padding: 3px 10px ;
+    right: 0;
+    font-size: 17px;
+    ul {
+      list-style: none;
+      border-radius: 8px;
+      background-color: rgba(248,248,255,.8);
+      li {
+        &:not(:last-child){
+          border-bottom: 1px solid rgb(176,196,222);
+        };
+        padding: 3px 0;
+        &:hover {
+          background-color: rgba(216,191,216,1);
+        }
+        a {
+          text-decoration: none;
+          color: black;
+          cursor: inherit;
+        }
+      }
     }
   }
   .title {
@@ -156,11 +246,13 @@
     }
   }
   .summary {
-    font-size: 1.5rem;
-    padding: 3px 0 10px;
+    font-size: 1.4rem;
+    padding: 3px 0 3px;
+    margin: 0 15px;
   }
   .editor-container {
     word-break: break-word;
+    user-select: text;
   }
   .navigation-btn {
     font-size: 1.3em;
@@ -190,5 +282,12 @@
   }
   .v-note-navigation-wrapper {
     border-radius: 20px;
+  }
+
+  .more-selector-enter-active, .more-selector-leave-active {
+    transition: opacity .5s;
+  }
+  .more-selector-enter, .more-selector-leave-to {
+    opacity: 0;
   }
 </style>

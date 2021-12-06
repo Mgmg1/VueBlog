@@ -113,6 +113,7 @@
         return {'background-position-y': `${this.barProcess * 100}%` }
       }
     },
+    //初次创建组件会触发
     activated() {
       getFingerPrintId().then(fingerPrintId=>{
         this.$store.commit(types.SET_FINGERPRINTF_ID,fingerPrintId)
@@ -131,6 +132,7 @@
     deactivated() {
       this.$bus.$off('blogItemClick')
     },
+    //初次创建组件时不会触发，创建完成后改变组件url才会触发
     watch:{
       $route(newRoute,oldRoute){
         if(oldRoute.params.uid !== newRoute.params.uid) {
