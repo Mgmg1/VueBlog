@@ -1,6 +1,12 @@
 <template>
-  <div class="login">
+  <div class="login" >
     <div class="home-btn" @click="goMainPage">主站</div>
+    <transition name="login-background-on">
+      <img class="login-background"
+           v-show="isLoginBackgroundLoaded"
+           src="http://r.photo.store.qq.com/psc?/V53RZdap02olQB1qJRDI0kxlEl0h2BPA/45NBuzDIW489QBoVep5mcRmJJ6swkxuDdj5W8*udZhOrZdj56OcM2z.Y7SzeMsAvin*GfbBCBTaToKhpue*u5huGsWa.5KVYyr9b5YUVRzQ!/r"
+           @load="isLoginBackgroundLoaded = true" />
+    </transition>
     <div class="container">
       <div class="select">
         <div class="login-view-btn" @click="toLoginView">
@@ -105,6 +111,7 @@
         hasSentEmail:false,
         isAutoLogin:false,
         isPasswordVisible:false,
+        isLoginBackgroundLoaded:false,
         logIn:{
           username:'',
           password:'',
@@ -119,6 +126,9 @@
       }
     },
     methods:{
+      /*
+        触发事件
+       */
       toLoginView(){
         if(!this.isLoginView){
           this.isLoginView = true
@@ -136,7 +146,7 @@
         this.isPasswordVisible = !this.isPasswordVisible
       },
       doLogin(){
-        login(this.logIn,this.fingerPrintId).then(res => {
+        login(this.logIn,this.isAutoLogin).then(res => {
           alert(res.data.message)
           if (res.data.code === 200 && res.data.data) {
             setToken(res.data.data.token)
@@ -198,7 +208,6 @@
       },
       ...mapGetters([
         'isLogIn',
-        'fingerPrintId',
         'defaultUserId',
         'user'
       ])
@@ -212,6 +221,7 @@
 .login {
   .home-btn {
     position: absolute;
+    z-index: 10;
     top: 0;
     right: 15px;
     color: rgba(246, 185, 167, 0.45);
@@ -223,11 +233,25 @@
   }
   position: relative;
   height: 100vh;
-  background: {
-    image: url("http://r.photo.store.qq.com/psc?/V53RZdap02olQB1qJRDI0kxlEl0h2BPA/45NBuzDIW489QBoVep5mcRmJJ6swkxuDdj5W8*udZhOrZdj56OcM2z.Y7SzeMsAvin*GfbBCBTaToKhpue*u5huGsWa.5KVYyr9b5YUVRzQ!/r");
-    size: cover;
-    position: center;
-  };
+  .login-background-on-enter-active,.login-background-on-leave-active {
+    transition: opacity 2s ease-out ;
+  }
+  .login-background-on-enter,.login-background-on-leave-to {
+    opacity: 0;
+  }
+  .login-background {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    user-select: none;
+    cursor: inherit;
+    pointer-events: none; //禁止与鼠标 等相关事件，如  不可拖拉图片
+  }
+  /*background: {*/
+  /*  image: url("http://r.photo.store.qq.com/psc?/V53RZdap02olQB1qJRDI0kxlEl0h2BPA/45NBuzDIW489QBoVep5mcRmJJ6swkxuDdj5W8*udZhOrZdj56OcM2z.Y7SzeMsAvin*GfbBCBTaToKhpue*u5huGsWa.5KVYyr9b5YUVRzQ!/r");*/
+  /*  size: cover;*/
+  /*  position: center;*/
+  /*};*/
   .container {
     position: absolute;
     left: 50%;

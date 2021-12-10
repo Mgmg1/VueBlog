@@ -217,7 +217,7 @@
         }
         this.$toast.setMsg('处理中...')
         this.$toast.setShow( true )
-        upload(formData,signData,this.fingerPrintId).then(res=>{
+        upload(formData,signData).then(res=>{
           setTimeout( ( )=>{
             this.$toast.setShow( false )
           },2000)
@@ -251,7 +251,6 @@
     computed:{
       ...mapGetters([
         'user',
-        'fingerPrintId',
       ])
     }
   }

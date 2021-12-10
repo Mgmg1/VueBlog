@@ -96,7 +96,7 @@
         this.currentIndex = index
       },
       submitHeadImgUrl(){
-        submitHeadImgUrl(this.fingerPrintId,this.headImgUrl,this.user.userId).then(res=>{
+        submitHeadImgUrl(this.headImgUrl,this.user.userId).then(res=>{
           if(res.data){
             alert(res.data.message)
             if(res.data.code === 200 && res.data.data) {
@@ -106,7 +106,7 @@
         })
       },
       submitAnnouncement() {
-        submitAnnouncement(this.fingerPrintId,this.announcement,this.user.userId).then(res=>{
+        submitAnnouncement(this.announcement,this.user.userId).then(res=>{
           if(res.data){
             alert(res.data.message)
             if(res.data.code === 200 && res.data.data) {
@@ -119,7 +119,7 @@
         })
       },
       submitGithubBilibiliUrl() {
-        submitGithubBilibiliUrl(this.user.userId,this.githubUrl,this.bilibiliUrl,this.fingerPrintId).then(res=>{
+        submitGithubBilibiliUrl(this.user.userId,this.githubUrl,this.bilibiliUrl).then(res=>{
           if(res.data){
             alert(res.data.message)
             if(res.data.code === 200 && res.data.data ) {
@@ -138,7 +138,6 @@
     computed:{
       ...mapGetters([
         'user',
-        'fingerPrintId',
         'pageUser'
       ]),
       activeContentItemStyle(){

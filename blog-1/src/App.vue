@@ -13,7 +13,7 @@
   import * as types from "./store/mutations-type";
   import {autoLogin, getDefaultUserId} from "./network/blogpage";
   import {mapGetters} from "vuex";
-  import {getFingerPrintId} from "./common/utils";
+  import { getToken } from "./common/cache";
 
   export default {
   name: 'App',
@@ -27,7 +27,7 @@
       script.src = '//at.alicdn.com/t/font_2358351_0pamhcya2yj.js'
       document.body.appendChild(script)
     },
-    initialize(fingerPrintId){
+    initialize(){
       if(!this.isLogIn) {
         let isAutoLogin = getAutoLogin();
         if(!isAutoLogin) {
@@ -40,9 +40,8 @@
             this.$store.commit(types.SET_DEFAULT_USER_ID,Number.parseInt(res.data.data))
           }
         })
-        autoLogin(fingerPrintId, isAutoLogin).then(res => {
+        autoLogin(getToken()).then(res => {
           if (res.data.code === 200 && res.data.data) {
-            setToken(res.data.data.token)
             this.$store.commit(types.SET_LOGIN, true)
             this.$store.commit(types.SET_USER, res.data.data.user)
           }
@@ -52,14 +51,10 @@
   },
   created() {
     this.requireIconFont()
-    getFingerPrintId().then(fingerPrintId=>{
-      this.$store.commit(types.SET_FINGERPRINTF_ID,fingerPrintId)
-      this.initialize(fingerPrintId)
-    })
+    this.initialize()
   },
   computed:{
     ...mapGetters([
-      'fingerPrintId',
       'user',
       'isLogIn'
     ])

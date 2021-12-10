@@ -107,9 +107,9 @@
   position: relative;
   width: 100%;
   margin-bottom: 20px;
-  background-color: rgba(255,255,255,var(--global-opacity,1));
+  background-color: rgba(245,245,245,var(--global-opacity,1));
   overflow: hidden;
-  border-radius: 20px;
+  border-radius: 12px;
   text-align: center;
   .user-head {
     position: relative;
@@ -121,7 +121,7 @@
       repeat: no-repeat;
       size: cover;
     }
-
+    box-shadow: 0 2px 10px rgb(150,150,150);
     img {
       position: absolute;
       bottom: 0;

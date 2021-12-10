@@ -16,12 +16,15 @@
 .nav-bar{
   display: flex;
   .left {
+    position: relative;
     height: 100%;
   }
   .right {
+    position: relative;
     height: 100%;
   }
   .center {
+    position: relative;
     flex: 1 1 auto;
     height: 100%;
   }

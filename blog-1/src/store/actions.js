@@ -4,7 +4,7 @@ import {SET_BLOGS_INFO} from "./mutations-type";
 const actions = {
   deleteArticleByArticleIdInAction( {commit,state}, {router} ) {
       let copy = {...state.blogsInfo};
-      deleteArticleByArticleId(state.currentBlog.userId,state.currentBlog.articleId,state.fingerPrintId).then((res)=>{
+      deleteArticleByArticleId(state.currentBlog.userId,state.currentBlog.articleId).then((res)=>{
         if( res.data != null && res.data.code === 200 ) {
           alert('已删除!')
           commit(SET_BLOGS_INFO,{})

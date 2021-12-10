@@ -130,23 +130,23 @@ export function getRainbowRgba(length, min, max) {
 }
 
 
-export function getFingerPrintId() {
-  //这是个异步的方法
-  return new Promise((resolve, reject) => {
-    Fingerprint2.get((components) => {
-      const values = components.map((component, index) => {
-        if (index === 0) {
-          //将微信浏览器里的 UA 的 wifi 和 4g 等网络置空，否则切换网络时，会导致得出的结果不一样
-          return component.value.replace(/\bNetType\/\w+\b/, '')
-        }
-        return component.value
-      })
-      const murmur = Fingerprint2.x64hash128(values.join(''), 31)
-      //保证murmur已经有值
-      resolve(murmur)
-    })
-  })
-}
+// export function getFingerPrintId() {
+//   //这是个异步的方法
+//   return new Promise((resolve, reject) => {
+//     Fingerprint2.get((components) => {
+//       const values = components.map((component, index) => {
+//         if (index === 0) {
+//           //将微信浏览器里的 UA 的 wifi 和 4g 等网络置空，否则切换网络时，会导致得出的结果不一样
+//           return component.value.replace(/\bNetType\/\w+\b/, '')
+//         }
+//         return component.value
+//       })
+//       const murmur = Fingerprint2.x64hash128(values.join(''), 31)
+//       //保证murmur已经有值
+//       resolve(murmur)
+//     })
+//   })
+// }
 
 /**
  *

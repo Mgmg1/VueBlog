@@ -1,8 +1,8 @@
 <template>
   <div class="music-box">
     <nav-bar class="music-box-navbar">
-      <div slot="left" class="head">音乐盒</div>
-      <div class="music-search-input" slot="center" >
+      <div slot="left" class="head"><span>音乐盒</span></div>
+      <div slot="center" class="music-search-input"  >
         <input type="text" ref="search" v-model="keyword"/>
       </div>
       <div slot="right" class="music-search-icon">
@@ -320,27 +320,27 @@
     width: 100%;
     background-color: rgba(255,255,255,var(--global-opacity,1));
     height: 420px;
-    border: {
-      top-left-radius: 20px;
-      top-right-radius: 20px;
-      bottom-left-radius: 15px;
-      bottom-right-radius: 15px;
-    };
+    border-radius: 15px;
     padding-bottom: 20px;
     .music-box-navbar {
-      padding: 5px 0 10px 0;
       margin: 0 10px;
       height: 50px;
       border-bottom: 2px solid lightblue;
+      text-align: center;
       .head {
-        padding: 0 5px 0 10px;
+        display: flex;
+        align-items: center;
         height: 100%;
         font-weight: bold;
-        font-size: 1.5em;
+        font-size: 1.5rem;
+        white-space:nowrap;
       }
       .music-search-input {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         > input {
-          margin: 5px 0 0 10px;
           border: {
             radius: 5px;
             style: solid;
@@ -357,6 +357,10 @@
         }
       }
       .music-search-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
         height: 100%;
         text-align: center;
         svg {
@@ -383,7 +387,7 @@
         right: 0px;
         top:-2px;
         bottom: -2px;
-        border-radius: 20px;
+        border-radius: 17px;
         border: 1px solid transparent;
         overflow: hidden;
         > video {
@@ -391,6 +395,7 @@
           bottom: 0;
           width: 100%;
         }
+        box-shadow: 0 0 10px rgba(20,20,20,.5);
       }
       display: flex;
       height: 120px;

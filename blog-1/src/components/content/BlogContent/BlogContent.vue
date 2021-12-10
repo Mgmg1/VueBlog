@@ -136,7 +136,6 @@
     computed:{
       ...mapGetters([
         'currentBlog',
-        'fingerPrintId',
         'user'
       ]),
     },
@@ -151,9 +150,7 @@
       this.initialize()
     },
     watch:{
-      fingerPrintId(){
-        this.initialize()
-      }
+
     }
   }
 </script>

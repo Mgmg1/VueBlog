@@ -17,7 +17,6 @@
 
 <script>
   import {mapGetters} from "vuex";
-  import {getFingerPrintId} from "../../common/utils";
   import * as types from "../../store/mutations-type";
   import {getAutoLogin, setToken} from "../../common/cache";
   import {autoLogin, getBlogInfos, getBlogTypeInfo, getDefaultUserId, getUserInfo} from "../../network/blogpage";
@@ -46,16 +45,15 @@
       handleScroll(vertical, horizontal, nativeEvent){
         this.barProcess = vertical.process
       },
-      autoLogin(fingerPrintId) {
+      autoLogin() {
         let isAutoLogin = getAutoLogin();
         if (!isAutoLogin) {
           //undefine 转 false
           isAutoLogin = false
         }
-        autoLogin(fingerPrintId, isAutoLogin).then(res => {
+        autoLogin().then(res => {
           if (res.data.code === 200) {
             if (res.data.data) {
-              setToken(res.data.data.token)
               this.$store.commit(types.SET_LOGIN, true)
               this.$store.commit(types.SET_USER, res.data.data.user)
             }
@@ -105,7 +103,6 @@
     },
     computed:{
       ...mapGetters([
-        'fingerPrintId',
         'user',
         'isLogIn'
       ]),
@@ -115,11 +112,8 @@
     },
     //初次创建组件会触发
     activated() {
-      getFingerPrintId().then(fingerPrintId=>{
-        this.$store.commit(types.SET_FINGERPRINTF_ID,fingerPrintId)
-        this.autoLogin(fingerPrintId)
-        this.setPageInfo()
-      })
+      this.autoLogin()
+      this.setPageInfo()
       this.$bus.$on('blogItemClick',(time)=>{
         this.$refs["vs"].scrollTo({
             y: 170
@@ -136,11 +130,8 @@
     watch:{
       $route(newRoute,oldRoute){
         if(oldRoute.params.uid !== newRoute.params.uid) {
-          getFingerPrintId().then(fingerPrintId=>{
-            this.$store.commit(types.SET_FINGERPRINTF_ID,fingerPrintId)
-            this.autoLogin(fingerPrintId)
-            this.setPageInfo()
-          })
+          this.autoLogin()
+          this.setPageInfo()
         }
       }
     }

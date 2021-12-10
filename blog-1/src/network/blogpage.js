@@ -6,17 +6,17 @@ import {getParamsMd5Str} from "../common/utils";
 /*
   登录
  */
-export function login(data,fid) {
+export function login(data,isAutoLogin) {
 
   let paramsData = {
     userName:data.username,
     password:data.password,
+    isAutoLogin
   }
 
   return request2({
     method:'post',
     url:`${blogHost}/login`,
-    headers:{fid},
     params:{
       ...paramsData,
       sign:getParamsMd5Str(paramsData)
@@ -27,20 +27,12 @@ export function login(data,fid) {
 /*
   当进入或切换页面时，需要验证登录逻辑
  */
-export function autoLogin(fid,isAutoLogin) {
-
-  let paramsData = {
-    isAutoLogin
-  }
+export function autoLogin() {
 
   return request2({
     method:'post',
     url: `${blogHost}/autologin`,
-    headers: {'Authorization':getToken(),'fid':fid},
-    params:{
-      ...paramsData,
-      sign:getParamsMd5Str(paramsData)
-    }
+    headers: {'Authorization':getToken()}
   })
 }
 
@@ -121,7 +113,7 @@ export function getBlogTypeInfo(usedId) {
 /*
   上传blog时，提交form表单
  */
-export function upload(formData,signData,fid) {
+export function upload(formData,signData) {
 
   let md5Str = getParamsMd5Str(signData)
   formData.append('sign',md5Str)
@@ -130,7 +122,6 @@ export function upload(formData,signData,fid) {
     method: 'post',
     headers: {
       'Authorization': getToken(),
-      'fid': fid,
       'Content-Type':'application/x-www-form-urlencoded'},
     url: `${blogHost}/upload`,
     data: formData
@@ -212,7 +203,7 @@ export function getUserInfo(userId) {
 /*
   更新用户头像的url
  */
-export function submitHeadImgUrl(fid,url,uid) {
+export function submitHeadImgUrl(url,uid) {
 
   let paramsData = {
     url,
@@ -224,7 +215,6 @@ export function submitHeadImgUrl(fid,url,uid) {
     url:`${blogHost}/setheadimgurl`,
     headers:{
       'Authorization': getToken(),
-      'fid': fid,
     },
     params:{
       ...paramsData,
@@ -236,7 +226,7 @@ export function submitHeadImgUrl(fid,url,uid) {
 /*
   更新公告栏的内容
  */
-export function submitAnnouncement(fid,annon,uid) {
+export function submitAnnouncement(annon,uid) {
 
   let paramsData = {
     annon,
@@ -247,8 +237,7 @@ export function submitAnnouncement(fid,annon,uid) {
     method:'post',
     url:`${blogHost}/setannon`,
     headers:{
-      'Authorization': getToken(),
-      'fid': fid,
+      'Authorization': getToken()
     },
     params:{
       ...paramsData,
@@ -277,7 +266,7 @@ export function getTagsByArticleId(articleId) {
 /*
   更新 github 和 bilibili 主页 url
  */
-export function submitGithubBilibiliUrl(userId,githubUrl,bilibiliUrl,fid) {
+export function submitGithubBilibiliUrl(userId,githubUrl,bilibiliUrl) {
   let paramsData = {
     'githubUrl':githubUrl,
     'bilibiliUrl':bilibiliUrl,
@@ -289,7 +278,6 @@ export function submitGithubBilibiliUrl(userId,githubUrl,bilibiliUrl,fid) {
     url:`${blogHost}/setgburl`,
     headers:{
       'Authorization': getToken(),
-      'fid': fid,
     },
     params:{
       ...paramsData,
@@ -305,7 +293,7 @@ export function downloadBlogFileUrl(articleId) {
 /*
   根据 articleId删除 对应的article
  */
-export function deleteArticleByArticleId(userId,articleId,fid) {
+export function deleteArticleByArticleId(userId,articleId) {
   let paramsData = {
     'uid':userId,
     'aid':articleId
@@ -315,7 +303,6 @@ export function deleteArticleByArticleId(userId,articleId,fid) {
     url:`${blogHost}/deletearticle`,
     headers:{
       'Authorization': getToken(),
-      'fid': fid,
     },
     params:{
       ...paramsData,

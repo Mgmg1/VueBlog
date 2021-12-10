@@ -40,6 +40,7 @@
         this.$bus.$emit('blogItemClick',time)
         setTimeout(()=>{
           //等待滚动条滚动完毕！！!
+          console.log(3333)
           this.$router.push(`${this.$route.fullPath}/content/${blog.articleId}`)
         },time+40)
       },
@@ -50,7 +51,6 @@
     computed:{
       ...mapGetters([
         'blogsInfo',
-        'fingerPrintId',
       ]),
     },
     activated() {

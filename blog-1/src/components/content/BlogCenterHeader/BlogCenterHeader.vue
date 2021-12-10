@@ -132,8 +132,8 @@
   .center-header {
     position: relative;
     padding: 10px 10px;
-    background-color: rgba(255,255,255,var(--global-opacity,1));
-    border-radius: 20px;
+    background-color: rgba( 250,250,250,var(--global-opacity,1));
+    border-radius: 15px;
     min-width: 80px;
     .center-bar {
       height: 100%;
