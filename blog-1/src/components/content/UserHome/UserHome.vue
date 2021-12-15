@@ -34,7 +34,7 @@
           <div class="content-item" v-show="1 === currentIndex">
             <div class="announcement-input-panel">
               <p>可使用html ,并内联css样式~~~~</p>
-              <textarea v-model="announcement" rows="5" cols="25" style="resize: none" maxlength="2000"/>
+              <textarea v-model="announcement" key="announcement-input" rows="5" cols="25" style="resize: none" maxlength="2000"/>
               <div ><span class="submit-btn" @click="submitAnnouncement">提交</span></div>
             </div>
           </div>
@@ -42,11 +42,11 @@
             <div class="other">
               <span >github地址:</span>
               <div class="gburl-input">
-                <input v-model="githubUrl" maxlength="1000" />
+                <input v-model="githubUrl" key="github-url-input" maxlength="1000" />
               </div>
               <span >bilibili主页:</span>
               <div class="gburl-input">
-                <input v-model="bilibiliUrl" maxlength="1000"/>
+                <input v-model="bilibiliUrl" key="bilibili-url-input" maxlength="1000"/>
               </div>
               <span class="submit-btn" @click="submitGithubBilibiliUrl">提交</span>
             </div>
@@ -147,7 +147,7 @@
     },
     watch:{
       //监视属性
-      'user':{
+      'pageUser':{
         handler(newVal){
           this.headImgUrl = newVal.headImgUrl
           this.announcement = newVal.announcement

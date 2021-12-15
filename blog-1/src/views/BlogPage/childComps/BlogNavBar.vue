@@ -1,11 +1,12 @@
 <template>
   <div>
     <nav-bar class="blog-nav-bar">
-      <div slot="left" class="opacityBar">
+      <div slot="left" >
         <common-progress-bar :side-length="20"
                              :max="1"
                              :min="0"
                              :default-bar-value="0.08"
+                             class="opacityBar"
                              @btnXChange="valChange"/>
       </div>
       <div slot="center"></div>
@@ -131,7 +132,7 @@
       width: 50px;
       bottom: 2px;
       transition: width .5s;
-
+      z-index: 20;
       &:hover {
         width: 170px;
       }

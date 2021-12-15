@@ -25,7 +25,8 @@ const state = {
   pageUser:{
 
   },
-  defaultUserId:1
+  defaultUserId:1,
+  currentBlogType:'all' //blogType : all，notetype，category, tag
 }
 
 const store = new Vuex.Store({

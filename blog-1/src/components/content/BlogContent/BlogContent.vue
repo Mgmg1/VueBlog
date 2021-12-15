@@ -8,7 +8,7 @@
       <div class="more-selector" v-show="isShowMoreSelector">
         <ul>
           <li @click="moreSelect(1)">编辑</li>
-          <li @click="moreSelect(2)"><a target="_blank" ref="download">导出</a></li>
+          <li @click="moreSelect(2)"><a  target="_blank" ref="download">导出</a></li>
           <li @click="moreSelect(3)">删除</li>
         </ul>
       </div>
@@ -106,6 +106,9 @@
           if (res.data.code === 200 && res.data.data) {
             this.$store.commit(types.SET_CURRBLOG, res.data.data)
             this.markdownText = res.data.data.content
+            until(()=>this.$refs.download,()=>{
+              this.$refs.download.setAttribute('href',downloadBlogFileUrl(blogId))
+            })
           }
         })
         getTagsByArticleId( blogId ).then(res=>{
@@ -136,15 +139,9 @@
     computed:{
       ...mapGetters([
         'currentBlog',
-        'user'
+        'user',
+        'pageUser'
       ]),
-    },
-    mounted() {
-      this.$nextTick(()=>{
-        until(()=>this.$refs.download,()=>{
-          this.$refs.download.href = downloadBlogFileUrl(1);
-        })
-      })
     },
     activated() {
       this.initialize()
