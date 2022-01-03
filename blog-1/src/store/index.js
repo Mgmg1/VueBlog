@@ -26,7 +26,10 @@ const state = {
 
   },
   defaultUserId:1,
-  currentBlogType:'all' //blogType : all，notetype，category, tag
+  currentBlogType:{
+    type:'all', //blogType : all，notetype，category, tag
+    info:'all' //携带的查询信息
+  }
 }
 
 const store = new Vuex.Store({

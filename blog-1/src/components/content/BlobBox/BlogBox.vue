@@ -34,14 +34,23 @@
 
   export default {
     name: "BlogBox",
+    data() {
+      return{
+        canClickBlogItem : true //阻止重复的点击
+      }
+    },
     methods:{
       blogItemClick(blog){
-        let time = 300
-        this.$bus.$emit('blogItemClick',time)
-        setTimeout(()=>{
-          //等待滚动条滚动完毕！！!
-          this.$router.push(`${this.$route.fullPath}/content/${blog.articleId}`)
-        },time+40)
+        if( this.canClickBlogItem ) {
+          this.canClickBlogItem = false;
+          let time = 300
+          this.$bus.$emit('blogItemClick',time) //blogItemClick 事件，通知scroller进行滚动
+          setTimeout(()=>{
+            //等待滚动条滚动完毕！！!
+            this.$router.push(`${this.$route.fullPath}/content/${blog.articleId}`)
+            this.canClickBlogItem = true;
+          },time+40)
+        }
       },
       formatDate(date) {
         return formatDate(new Date(date),'yyyy-MM-dd hh-mm-ss'  )
@@ -50,24 +59,37 @@
     computed:{
       ...mapGetters([
         'blogsInfo',
+        'currentBlogType'
       ]),
     },
     activated() {
-      //父组件先初始化
-      let userId =  parseInt(this.$route.params.uid)
-      if( !isNaN(userId) && userId > 0 ) {
-        getBlogTypeInfo(userId).then(res => {
-          if (res.data.code === 200 && res.data.data) {
-            this.$store.commit(types.SET_BLOGS_COUNT_INFO, res.data.data)
-          }
-        })
-        getBlogInfos('all',userId,'all').then(res=>{
-          if(res.data.code === 200 && res.data.data) {
-            this.$store.commit(types.SET_BLOGS_INFO,res.data.data)
-          }
-        })
-      }
-    }
+
+    },
+    // beforeRouteEnter(to,from,next) {
+    //   /*
+    //     因为是限定blogbox的路由组件中了，to就是现在的activated的blogbox  route
+    //     现在获取不到 this
+    //    */
+    //   // console.log(from) 由于router配置文件中最开始进行了重定向，因此刚进入页面时，from会打印匹配路径 '/'
+    //   // console.log( to ) 然后由于重定向，跳转到 /1
+    //
+    //   //先激活父组件blogpage，再到子组件，由于blogpage确定了uid，因此先初始化
+    //   // let userId =  parseInt(to.params.uid)
+    //   // if( !isNaN(userId) && userId > 0 ) {
+    //   //   getBlogTypeInfo(userId).then(res => {
+    //   //     if (res.data.code === 200 && res.data.data) {
+    //   //       this.$store.commit(types.SET_BLOGS_COUNT_INFO, res.data.data)
+    //   //     }
+    //   //   })
+    //   //   getBlogInfos(this.currentBlogType.type,userId,this.currentBlogType.info).then(res=>{
+    //   //     if(res.data.code === 200 && res.data.data) {
+    //   //       this.$store.commit(types.SET_BLOGS_INFO,res.data.data)
+    //   //     }
+    //   //   })
+    //   // }
+    //   console.log( to )
+    //   next(vm=>{})
+    // }
   }
 </script>
 

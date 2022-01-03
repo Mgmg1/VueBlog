@@ -5,11 +5,11 @@
     </div>
     <div class="user-name">{{ pageUser.userName }}</div>
     <div class="user-note-info">
-      <div @click="displayDailyBlog" class="dailyblog-count">
+      <div @click="displayBlog(1)" class="dailyblog-count">
         日常
         <div class="record-num">{{ dailyBlogCount }}</div>
       </div>
-      <div @click="displayStudyNote" class="studyblog-count">
+      <div @click="displayBlog(2)" class="studyblog-count">
         笔记
         <div class="record-num">{{ studyBlogCount }}</div>
       </div>
@@ -48,32 +48,48 @@
       }
     },
     methods:{
-      displayDailyBlog(){
-        getBlogInfos('notetype',this.pageUser.userId,'1').then(res=>{
-          if (res.data.code === 200 && res.data.data ) {
-            this.$store.commit(types.SET_BLOGS_INFO,res.data.data)
-            if(this.$route.fullPath.match(/\/content\//)) {
-              this.$router.back()
-            }
-          }
-        })
-      },
-      displayStudyNote(){
-        getBlogInfos('notetype',this.pageUser.userId,'2').then(res=>{
-          if (res.data.code === 200 && res.data.data ) {
-            this.$store.commit(types.SET_BLOGS_INFO,res.data.data)
-            if(this.$route.fullPath.match(/\/content\//)) {
-              this.$router.back()
-            }
-          }
-        })
-      },
+      /*
+        可以考虑将  displayDailyBlog 和  displayStudyNote 合并，它们只有 name参数上的不同
+       */
+      // displayDailyBlog(blogName){
+      displayBlog(blogName){
+        //修改为即将请求的blogtype
+        this.$store.commit(types.SET_CURRENT_BLOG_TYPE,{type:'notetype',info:blogName})
 
+        if(this.$route.fullPath.match(/\/content\//)) {
+          this.$router.push(`/${this.$route.params.uid}`)
+        }else {
+          getBlogInfos(this.currentBlogType.type,this.pageUser.userId,blogName).then(res=>{
+            if (res.data.code === 200 && res.data.data ) {
+              this.$store.commit(types.SET_BLOGS_INFO,res.data.data)
+            }else {
+              alert(res.data.message)
+            }
+          }).catch(err => {
+            alert(err)
+          })
+        }
+      },
+      // displayStudyNote(){
+      //   this.$store.commit(types.SET_CURRENT_BLOG_TYPE,'notetype')
+      //
+      //   if(this.$route.fullPath.match(/\/content\//)) {
+      //     this.$router.push(`/${this.$route.params.uid}`)
+      //   }
+      //   getBlogInfos(this.currentBlogType,this.pageUser.userId,'2').then(res=>{
+      //     if (res.data.code === 200 && res.data.data ) {
+      //       this.$store.commit(types.SET_BLOGS_INFO,res.data.data)
+      //     }
+      //   }).catch(err => {
+      //     console.log(err)
+      //   })
+      // },
     },
     computed:{
       ...mapGetters([
         'blogsCountInfo',
-        'pageUser'
+        'pageUser',
+        'currentBlogType'
       ]),
       dailyBlogCount(){
         if(this.blogsCountInfo && this.blogsCountInfo.noteTypeInfo){

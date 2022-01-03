@@ -47,8 +47,9 @@
   import {
     getBlogContent,
     getTagsByArticleId,
+    getBlogTypeInfo,
+    getBlogInfos,
     downloadBlogFileUrl,
-    deleteArticleByArticleId
   } from "../../../network/blogpage";
   import * as types from "../../../store/mutations-type";
   import {formatDate,until} from "../../../common/utils";
@@ -78,7 +79,7 @@
         }
       },
       back(){
-        this.$router.back()
+        this.$router.push(`/${this.$route.params.uid}`)
       },
       moreSelect(index) {
         /*
@@ -140,14 +141,46 @@
       ...mapGetters([
         'currentBlog',
         'user',
-        'pageUser'
+        'pageUser',
+        'currentBlogType'
       ]),
     },
     activated() {
       this.initialize()
     },
-    watch:{
-
+    /*
+      在router改变前获取信息，有beforeRouteLeave （ from ）  和beforeRouteEnter （to）两种做法
+      前者拿不到this。。。。所以不能接触到 vuex
+    */
+    beforeRouteLeave( to,from,next ) {
+      if( !isNaN(parseInt(to.params.uid)) ) {
+        let userId =  parseInt(to.params.uid)
+        let _this = this;
+        Promise.all( [getBlogTypeInfo(userId),
+          //参数解构还不能用在 箭头函数上
+          getBlogInfos(this.currentBlogType.type,userId,this.currentBlogType.info) ] ).then(  function ([res1,res2]) {
+          if (res1.data.code === 200 && res1.data.data) {
+            _this.$store.commit(types.SET_BLOGS_COUNT_INFO, res1.data.data)
+          }
+          if(res2.data.code === 200 && res2.data.data) {
+            _this.$store.commit(types.SET_BLOGS_INFO,res2.data.data)
+          }
+        }).finally(()=>{
+          next();
+        })
+        // getBlogTypeInfo(userId).then(res => {
+        //   if (res.data.code === 200 && res.data.data) {
+        //     this.$store.commit(types.SET_BLOGS_COUNT_INFO, res.data.data)
+        //   }
+        // })
+        // getBlogInfos(this.currentBlogType.type,userId,this.currentBlogType.info).then(res=>{
+        //   if(res.data.code === 200 && res.data.data) {
+        //     this.$store.commit(types.SET_BLOGS_INFO,res.data.data)
+        //   }
+        // })
+      }else {
+        next()
+      }
     }
   }
 </script>

@@ -34,16 +34,19 @@
     methods:{
       tagClick(item){
         if(item){
-          // this.$store.commit(type.SET_CURBLOGS_BYIDS,item.targetArticleIds)
-          getBlogInfos('tag',this.pageUser.userId,item.tagName).then(res=>{
-            // [] 放在 if 中 作条件 和  []==false 结果是不一样的！！！
-            if (res.data.code === 200 && res.data.data ) {
-              this.$store.commit(types.SET_BLOGS_INFO,res.data.data)
-              if(this.$route.fullPath.match(/\/content\//)) {
-                this.$router.back()
+          this.$store.commit(types.SET_CURRENT_BLOG_TYPE,{type:'tag',info:item.tagName})
+
+          if(this.$route.fullPath.match(/\/content\//)) {
+            this.$router.push(`/${this.$route.params.uid}`)
+          }else {
+            getBlogInfos(this.currentBlogType.type,this.pageUser.userId,item.tagName).then(res=>{
+              // [] 放在 if 中 作条件 和  []==false 结果是不一样的！！！
+              if (res.data.code === 200 && res.data.data ) {
+                console.log(res.data)
+                this.$store.commit(types.SET_BLOGS_INFO,res.data.data)
               }
-            }
-          })
+            })
+          }
         }
       },
       tagColorStyle(index){
@@ -57,7 +60,8 @@
     computed:{
       ...mapGetters([
         'blogsCountInfo',
-        'pageUser'
+        'pageUser',
+        'currentBlogType'
       ]),
     },
     watch:{

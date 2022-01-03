@@ -57,8 +57,10 @@ const mutations = {
       state.pageUser.githubUrl = payload.data.githubUrl
       state.pageUser.bilibiliUrl = payload.data.bilibiliUrl
     }
+  },
+  [types.SET_CURRENT_BLOG_TYPE]( state,blogType ) {
+    state.currentBlogType = blogType
   }
-
 }
 
 export default mutations

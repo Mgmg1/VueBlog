@@ -13,8 +13,13 @@ const loginView = () => import('../views/Login/LoginView')
 const routes = [
   {
     //  path:''  和 redirect:'/'    这会导致无限 redirect
+    // redirect 先于下面的组件激活，即路由确定下来后再激活组件,然后触发组件中的方法
+    //redirect 的路由守卫不起作用
     path:'',
-    redirect:'/1'
+    redirect:'/1',
+    // beforeEnter:(to, from, next) => {
+    //   console.log(from)
+    // }
   },
   {
     //配置顺序是有影响的!

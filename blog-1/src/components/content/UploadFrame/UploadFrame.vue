@@ -190,7 +190,7 @@
           return
         }
         if(!this.file){
-          alert('请上传文件!!')
+          alert('请上传文件')
           return
         }
         if(!this.tags) {

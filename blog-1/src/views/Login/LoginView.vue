@@ -173,6 +173,8 @@
         })
       },
       goMainPage(){
+        this.$store.commit(types.SET_CURRENT_BLOG_TYPE,{type:'all',info:'all'})
+        this.$store.commit( types.SET_BLOGS_INFO,[] )
         if (this.isLogIn) {
           this.$router.push(`/${this.user.userId}`)
         }else {

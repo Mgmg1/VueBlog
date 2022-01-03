@@ -13,8 +13,9 @@ const getters = {
 
   pageUser: state => state.pageUser,
 
-  defaultUserId: state => state.defaultUserId
+  defaultUserId: state => state.defaultUserId,
 
+  currentBlogType : state => state.currentBlogType
 }
 
 

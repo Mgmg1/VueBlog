@@ -60,8 +60,21 @@
     },
     methods:{
       homeClick(){
+        this.$store.commit(types.SET_CURRENT_BLOG_TYPE,{type:'all',info:'all'})
+
         if(this.$route.fullPath.match(/\/content\//)) {
-          this.$router.back()
+          this.$router.push(`/${this.$route.params.uid}`)
+        }else {
+          getBlogInfos(this.currentBlogType.type,this.pageUser.userId,'all').then(res=>{
+            // [] 放在 if 中 作条件 和  []==false 结果是不一样的！！！
+            if (res.data.code === 200 && res.data.data ) {
+              this.$store.commit(types.SET_BLOGS_INFO,res.data.data)
+            }else {
+              alert(res.data.message)
+            }
+          }).catch(err => {
+            alert(err)
+          })
         }
         getBlogTypeInfo(this.pageUser.userId).then(res => {
           if (res.data.code === 200 && res.data.data) {
@@ -75,14 +88,20 @@
         })
       },
       itemClick( item ){
-        getBlogInfos('category',this.pageUser.userId,item.categoryName).then(res=>{
+        this.$store.commit(types.SET_CURRENT_BLOG_TYPE,{type:'category',info:item.categoryName})
+
+        if(this.$route.fullPath.match(/\/content\//)) {
+          this.$router.push(`/${this.$route.params.uid}`)
+        }
+        getBlogInfos(this.currentBlogType.type,this.pageUser.userId,item.categoryName).then(res=>{
           // [] 放在 if 中 作条件 和  []==false 结果是不一样的！！！
           if (res.data.code === 200 && res.data.data ) {
             this.$store.commit(types.SET_BLOGS_INFO,res.data.data)
-            if(this.$route.fullPath.match(/\/content\//)) {
-              this.$router.back()
-            }
+          }else {
+            alert(res.data.message)
           }
+        }).catch(err => {
+          alert(err)
         })
       },
       editClick(){
@@ -112,7 +131,8 @@
         'blogsCountInfo',
         'pageUser',
         'user',
-        'isLogIn'
+        'isLogIn',
+        'currentBlogType'
       ]),
     },
     watch:{

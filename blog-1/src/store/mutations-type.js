@@ -23,3 +23,5 @@ export const SET_ANNOUNCEMENT = 'setAnnouncement'
 export const SET_PAGE_USER_ANNON = 'setPageUsetAnnon'
 
 export const SET_GITHUBBILIBILI_URL = 'setGithubBilibiliUrl'
+
+export const SET_CURRENT_BLOG_TYPE = 'setCurrentBlogType'

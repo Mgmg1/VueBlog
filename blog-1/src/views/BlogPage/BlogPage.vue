@@ -91,7 +91,7 @@
                   this.$store.commit(types.SET_BLOGS_COUNT_INFO, res.data.data)
                 }
               })
-              getBlogInfos('all',userId,'all').then(res=>{
+              getBlogInfos(this.currentBlogType.type,userId,this.currentBlogType.info).then(res=>{
                 if(res.data.code === 200 && res.data.data) {
                   this.$store.commit(types.SET_BLOGS_INFO,res.data.data)
                 }
@@ -104,7 +104,8 @@
     computed:{
       ...mapGetters([
         'user',
-        'isLogIn'
+        'isLogIn',
+        'currentBlogType'
       ]),
       blogPageStyle() {
         return {'background-position-y': `${this.barProcess * 100}%` }

@@ -155,6 +155,21 @@ export function getRainbowRgba(length, min, max) {
  */
 export function getParamsMd5Str(params, times = 3) {
 
+  let str = paramsToString( params );
+  console.log(str)
+  for (let i = 0; i < times; i++) {
+    str = md5(str).toUpperCase();
+  }
+  return str;
+}
+
+/**
+ * 将参数序列化，只适合数组一维的情况且数组元素不含数组时
+ * @param params
+ * @returns {string}
+ */
+export function paramsToString(params) {
+
   let str = ''
   let paramsArr = []
 
@@ -170,8 +185,11 @@ export function getParamsMd5Str(params, times = 3) {
     let value = ''
     if (params[key] instanceof Array) {
       let arrVal = ''
-      for (const element of params[key]) {
-        arrVal += element
+      for (let i = 0; i < params[key].length; i++) {
+        arrVal +=  params[key][i]
+        if( i < params[key].length - 1 ) {
+          arrVal += ','
+        }
       }
       value = arrVal
     } else {
@@ -183,10 +201,6 @@ export function getParamsMd5Str(params, times = 3) {
     } else {
       str += `&${key}=${value}`
     }
-  }
-
-  for (let i = 0; i < times; i++) {
-    str = md5(str).toUpperCase();
   }
   return str;
 }
